@@ -22,10 +22,3 @@ This BOF is threaded and waits 60 seconds for the thread to return. If the targe
 
 ## Support
 This BOF tool has been successfully compiled on Mac OSX systems and used on Windows 8.1+ (x64) systems. Compiling the BOF code should also work on other systems (Linux, Windows) that have the Mingw-w64 compiler installed.
-
-## Issues
-If you are compiling the tool on a Debian or Ubuntu based OS and encounter a message stating that CREDUIWIN_GENERIC or CREDUIWIN_GENERIC is undeclared then the solution is to add the definitions below manually in the Askcreds header file:
-
-`#define CREDUIWIN_GENERIC 0x1`
-
-`#define CREDUIWIN_CHECKBOX 0x2`

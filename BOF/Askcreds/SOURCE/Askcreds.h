@@ -4,6 +4,8 @@
 #include <wincred.h>
 
 #define MAXLEN 256
+#define CREDUIWIN_GENERIC 0x1
+#define CREDUIWIN_CHECKBOX 0x2
 #define CRED_PACK_GENERIC_CREDENTIALS 0x4
 
 //CREDUI
