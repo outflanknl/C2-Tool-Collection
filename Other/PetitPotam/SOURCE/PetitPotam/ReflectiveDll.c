@@ -60,7 +60,7 @@ RPC_STATUS CreateBindingHandle(IN LPWSTR lpwTarget, OUT RPC_BINDING_HANDLE* bind
 		rStatus = RpcBindingFromStringBindingW(StringBinding, &Binding);
 		if (!rStatus) {
 			SecurityQOS.Version = 1;
-			SecurityQOS.ImpersonationType = RPC_C_IMP_LEVEL_ANONYMOUS;
+			SecurityQOS.ImpersonationType = RPC_C_IMP_LEVEL_IMPERSONATE;
 			SecurityQOS.Capabilities = RPC_C_QOS_CAPABILITIES_DEFAULT;
 			SecurityQOS.IdentityTracking = RPC_C_QOS_IDENTITY_STATIC;
 
