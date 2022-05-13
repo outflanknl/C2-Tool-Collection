@@ -223,4 +223,56 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 		// Free the DOMAIN_CONTROLLER_INFO structure.
 		NETAPI32$NetApiBufferFree(pdcInfo);
 	}
+	else {
+		// Check if Device is joined to Azure AD.
+		PDSREG_JOIN_INFO ppJoinInfo = NULL;
+
+		// Use GetProcAddress to avoid API resolve error on Windows < 10/2016
+		_NetGetAadJoinInformation NetGetAadJoinInformation = (_NetGetAadJoinInformation)
+			GetProcAddress(GetModuleHandleA("Netapi32.dll"), "NetGetAadJoinInformation");
+		if (NetGetAadJoinInformation == NULL) {
+			BeaconPrintf(CALLBACK_ERROR, "GetProcAddress Failed");
+			return;
+		}
+
+		_NetFreeAadJoinInformation NetFreeAadJoinInformation = (_NetFreeAadJoinInformation)
+			GetProcAddress(GetModuleHandleA("Netapi32.dll"), "NetFreeAadJoinInformation");
+		if (NetFreeAadJoinInformation == NULL) {
+			BeaconPrintf(CALLBACK_ERROR, "GetProcAddress Failed");
+			return;
+		}
+
+		HRESULT hr = NetGetAadJoinInformation(NULL, &ppJoinInfo);
+		if (hr == S_OK){
+			BeaconPrintToStreamW(L"--------------------------------------------------------------------\n");
+			if (ppJoinInfo->joinType == 1){
+				BeaconPrintToStreamW(L"[+] This device is joined to Azure Active Directory (Azure AD)\n\n");
+			}
+			if (ppJoinInfo->joinType == 2){
+				BeaconPrintToStreamW(L"[+] An Azure AD work account is added on the device.\n");
+			}
+
+			BeaconPrintToStreamW(L"[+] Azure TenantDisplayName:\n");
+			BeaconPrintToStreamW(L"    %ls\n", ppJoinInfo->pszTenantDisplayName);
+
+			BeaconPrintToStreamW(L"[+] Azure Active Directory (Azure AD):\n");
+			BeaconPrintToStreamW(L"    %ls\n", ppJoinInfo->pszIdpDomain);
+
+			BeaconPrintToStreamW(L"[+] Azure TenantId:\n");
+			BeaconPrintToStreamW(L"    %ls\n", ppJoinInfo->pszTenantId);
+
+			BeaconPrintToStreamW(L"[+] Azure DeviceId:\n");
+			BeaconPrintToStreamW(L"    %ls\n", ppJoinInfo->pszDeviceId);
+
+			BeaconPrintToStreamW(L"[+] Azure JoinUserEmail:\n");
+			BeaconPrintToStreamW(L"    %ls\n", ppJoinInfo->pszJoinUserEmail);
+
+			BeaconPrintToStreamW(L"--------------------------------------------------------------------\n");
+
+			//Print final Output
+			BeaconOutputStreamW();
+			
+			NetFreeAadJoinInformation(ppJoinInfo);
+		}
+	}
 }

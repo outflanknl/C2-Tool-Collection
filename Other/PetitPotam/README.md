@@ -1,6 +1,6 @@
 # PetitPotam authentication attack #
 
-Reflective DLL implementation of the PetitPotam attack published by [@topotam77](https://twitter.com/topotam77)
+Reflective DLL implementation of the PetitPotam attack published by [@topotam77](https://twitter.com/topotam77).
 
 ## Background of PetitPotam
 

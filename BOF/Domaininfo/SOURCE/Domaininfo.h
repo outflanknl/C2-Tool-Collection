@@ -2,6 +2,33 @@
 
 #include <windows.h>
 
+typedef enum _DSREG_JOIN_TYPE {
+  DSREG_UNKNOWN_JOIN = 0,
+  DSREG_DEVICE_JOIN = 1,
+  DSREG_WORKPLACE_JOIN = 2
+} DSREG_JOIN_TYPE, *PDSREG_JOIN_TYPE;
+
+typedef struct _DSREG_USER_INFO {
+  LPWSTR pszUserEmail;
+  LPWSTR pszUserKeyId;
+  LPWSTR pszUserKeyName;
+} DSREG_USER_INFO, *PDSREG_USER_INFO;
+
+typedef struct _DSREG_JOIN_INFO {
+  DSREG_JOIN_TYPE joinType;
+  PCCERT_CONTEXT pJoinCertificate;
+  LPWSTR pszDeviceId;
+  LPWSTR pszIdpDomain;
+  LPWSTR pszTenantId;
+  LPWSTR pszJoinUserEmail;
+  LPWSTR pszTenantDisplayName;
+  LPWSTR pszMdmEnrollmentUrl;
+  LPWSTR pszMdmTermsOfUseUrl;
+  LPWSTR pszMdmComplianceUrl;
+  LPWSTR pszUserSettingSyncUrl;
+  DSREG_USER_INFO *pUserInfo;
+} DSREG_JOIN_INFO, *PDSREG_JOIN_INFO;
+
 //MSVCRT
 WINBASEAPI void __cdecl MSVCRT$memset(void *dest, int c, size_t count);
 WINBASEAPI size_t __cdecl MSVCRT$wcslen(const wchar_t *_Str);
@@ -27,3 +54,12 @@ DECLSPEC_IMPORT DWORD WINAPI NETAPI32$DsGetDcCloseW(HANDLE GetDcContextHandle);
 DECLSPEC_IMPORT DWORD WINAPI NETAPI32$NetUserModalsGet(LPCWSTR servername, DWORD level, LPBYTE  *bufptr);
 DECLSPEC_IMPORT DWORD WINAPI NETAPI32$DsGetDcOpenW(LPCWSTR DnsName, ULONG OptionFlags, LPCWSTR SiteName, GUID *DomainGuid, LPCWSTR DnsForestName, ULONG DcFlags, PHANDLE RetGetDcContext);
 DECLSPEC_IMPORT DWORD WINAPI NETAPI32$NetApiBufferFree(LPVOID Buffer);
+
+typedef HRESULT(WINAPI *_NetGetAadJoinInformation)(
+  LPCWSTR pcszTenantId,
+  PDSREG_JOIN_INFO *ppJoinInfo
+);
+
+typedef VOID(WINAPI *_NetFreeAadJoinInformation)(
+  PDSREG_JOIN_INFO pJoinInfo
+);
