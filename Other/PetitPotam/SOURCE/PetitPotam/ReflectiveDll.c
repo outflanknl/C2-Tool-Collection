@@ -1,3 +1,8 @@
+/*
+PetitPotam exploit by Cneelis @Outflank
+Based on original code by @topotam77
+*/
+
 #undef  _UNICODE
 #define _UNICODE
 #undef  UNICODE
@@ -118,8 +123,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved) {
 			}
 
 			szArglist = CommandLineToArgvW(lpwParams, &nArgs);
-			wprintf(L"[>] PetitPotam exploit by Cneelis @Outflank\n");
-			wprintf(L"[>] Based on original code by @topotam77\n\n");
 			if (nArgs < 2) {
 				Usage(L"PetitPotam");
 				goto CleanUp;
