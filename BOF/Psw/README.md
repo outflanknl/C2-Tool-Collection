@@ -11,7 +11,7 @@ A BOF tool that can be used to show Window titles from processes with active Win
 ## Usage
 Running the tools is straightforward. Once you imported the CNA script using Cobalt Strike's Script Manager, they are available as Cobalt Strike commands that can be executed within a beacon. This tools supports the following commands:
 
-* `Psw`
+* `psw`
 
 ## Support
 This BOF tool has been successfully compiled on Mac OSX systems and used on Windows 8.1+ (x64) systems. Compiling the BOF code should also work on other systems (Linux, Windows) that have the Mingw-w64 compiler installed.
