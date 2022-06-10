@@ -20,7 +20,9 @@ The toolset currently consists of the following tools:
 |**[KerbHash](BOF/KerbHash)**|Hash password to kerberos keys (rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1, and des_cbc_md5).|
 |**[Lapsdump](BOF/Lapsdump)**|Dump LAPS passwords from specified computers within Active Directory.|
 |**[PetitPotam](BOF/PetitPotam)**|BOF implementation of the PetitPotam attack published by [@topotam77](https://twitter.com/topotam77).|
+|**[Psc](BOF/Psc)**|Show detailed information from processes with established TCP and RDP connections.|
 |**[Psw](BOF/Psw)**|Show window titles from processes with active windows.|
+|**[Psx](BOF/Psx)**|Show detailed information from all processes running on the system and provides a summary of installed security products and tools.|
 |**[Smbinfo](BOF/Smbinfo)**|Gather remote system version info using the NetWkstaGetInfo API without having to run the Cobalt Strike port (tcp-445) scanner.|
 |**[SprayAD](BOF/SprayAD)**|Perform a fast Kerberos or LDAP password spraying attack against Active Directory.|
 |**[StartWebClient](BOF/StartWebClient)**|Start the WebClient Service programmatically from user context using a service trigger.|
@@ -35,3 +37,4 @@ The toolset currently consists of the following tools:
 ## How to use
 1. Clone this repository.
 2. Each tool contains an individual README.md file with instructions on how to compile and use the tool. With this approach, we want to give the user the choice of which tool they want to use without having to compile all the other tools.
+3. If you would like to compile all the BOF tools at once, type `make` within the [BOF](BOF/) subfolder.
