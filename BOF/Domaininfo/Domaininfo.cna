@@ -7,11 +7,13 @@ beacon_command_register("Domaininfo", "Using Active Directory Domain Services to
 
 alias Domaininfo {
     $bid = $1;
+    $barch  = barch($1);
 
     # Read in the right BOF file
-    $handle = openf(script_resource("Domaininfo.o"));
+    $handle = openf(script_resource("Domaininfo. $+ $barch $+ .o"));
     $data   = readb($handle, -1);
     closef($handle);
 
     beacon_inline_execute($bid, $data, "go", $null);
 }
+
