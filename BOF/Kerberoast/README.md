@@ -24,6 +24,9 @@ The TicketToHashcat.py script saves the tickets to a `roastme-<#hash-type>.txt` 
 * Roast all SPN enabled accounts without AES encryption: `Kerberoast roast-no-aes`
 * Roast specific accounts: `Kerberoast roast svc-test`
 
+## Opsec
+Listing and roasting tickets without specifying a sAMAccountName filter is opsec unsafe. The `servicePrincipalName=*` search filter might trigger a `LDAP Reconnaissance Activity` alert (for example when using M365 Defender).
+
 ## Support
 This BOF tool has been successfully compiled on Mac OSX systems and used on Windows 8.1+ (x64) systems. Compiling the BOF code should also work on other systems (Linux, Windows) that have the Mingw-w64 compiler installed.
 
