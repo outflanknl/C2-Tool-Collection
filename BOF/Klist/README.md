@@ -1,6 +1,6 @@
 # Klist BOF
 
-A BOF tool to displays a list of currently cached Kerberos tickets.
+A BOF tool to display a list of currently cached Kerberos tickets.
 
 ## How to compile
 1. Make sure that Mingw-w64 (including mingw-w64-binutils) has been installed.
