@@ -22,7 +22,7 @@ alias Kerberoast {
 	}
 
 	# Read in the right BOF file
-	$handle = openf(script_resource("Kerberoast.o"));
+	$handle = openf(script_resource("Kerberoast." . barch($bid) . ".o"));
 	$data   = readb($handle, -1);
 	closef($handle);
 
