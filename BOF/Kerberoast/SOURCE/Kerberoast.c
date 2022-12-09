@@ -208,6 +208,7 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 	BOOL bResult = FALSE, bRoast = FALSE;
 	WCHAR wcSearchFilter[BUF_SIZE] = { 0 };
 	LPCWSTR lpwFormat = L"(&(objectClass=user)(objectCategory=person)%ls(!(userAccountControl:1.2.840.113556.1.4.803:=2))(servicePrincipalName=*)(sAMAccountName=%ls))";
+	LPCWSTR lpwFormatNoListSpn = L"(&(objectClass=user)(objectCategory=person)%ls(!(userAccountControl:1.2.840.113556.1.4.803:=2))(sAMAccountName=%ls))";
 	PUSER_INFO pUserInfo = NULL;
 	INT iCount = 0;
 	DWORD x = 0L;
@@ -247,6 +248,10 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 	}
 
 	// Add the filter.
+	if (MSVCRT$_wcsicmp(lpwFilter, L"*") != 0) {
+		lpwFormat = lpwFormatNoListSpn;
+	}
+
 	if (bExcludeAES) {
 		MSVCRT$swprintf_s(wcSearchFilter, BUF_SIZE, lpwFormat, L"(!(msDS-SupportedEncryptionTypes>=8))", lpwFilter);
 		BeaconPrintf(CALLBACK_OUTPUT, "[*] Using LDAP filter: %ls\n", wcSearchFilter);
