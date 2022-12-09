@@ -18,11 +18,13 @@ The toolset currently consists of the following tools:
 |**[Domaininfo](BOF/Domaininfo)**|Enumerate domain information using Active Directory Domain Services.|
 |**[Kerberoast](BOF/Kerberoast)**|List all SPN enabled user/service accounts or request service tickets (TGS-REP) which can be cracked offline using HashCat.|
 |**[KerbHash](BOF/KerbHash)**|Hash password to kerberos keys (rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1, and des_cbc_md5).|
+|**[Klist](BOF/Klist)**|Displays a list of currently cached Kerberos tickets.|
 |**[Lapsdump](BOF/Lapsdump)**|Dump LAPS passwords from specified computers within Active Directory.|
 |**[PetitPotam](BOF/PetitPotam)**|BOF implementation of the PetitPotam attack published by [@topotam77](https://twitter.com/topotam77).|
 |**[Psc](BOF/Psc)**|Show detailed information from processes with established TCP and RDP connections.|
 |**[Psw](BOF/Psw)**|Show window titles from processes with active windows.|
 |**[Psx](BOF/Psx)**|Show detailed information from all processes running on the system and provides a summary of installed security products and tools.|
+|**[Psk](BOF/Psk)**|Show detailed information from the windows kernel and loaded driver modules and provides a summary of installed security products (AV/EDR drivers).|
 |**[Smbinfo](BOF/Smbinfo)**|Gather remote system version info using the NetWkstaGetInfo API without having to run the Cobalt Strike port (tcp-445) scanner.|
 |**[SprayAD](BOF/SprayAD)**|Perform a fast Kerberos or LDAP password spraying attack against Active Directory.|
 |**[StartWebClient](BOF/StartWebClient)**|Start the WebClient Service programmatically from user context using a service trigger.|

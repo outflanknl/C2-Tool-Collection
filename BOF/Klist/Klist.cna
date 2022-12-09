@@ -1,0 +1,30 @@
+#author Cornelis de Plaa
+#@outflank.nl
+
+beacon_command_register("klist", "Displays a list of currently cached Kerberos tickets.",
+    "Synopsis: klist [optional purge]\n");
+
+alias klist {
+    $bid = $1;
+
+    $input = substr($0, 6);
+    @args = split(' ', $input);
+
+    $purge = @args[0];
+
+    # Read in the right BOF file
+    $handle = openf(script_resource("Klist.o"));
+    $data   = readb($handle, -1);
+    closef($handle);
+
+    # Pack our arguments
+    if ($purge eq "") {
+        blog($bid, "Enumerating Kerberos tickets.");
+        beacon_inline_execute($bid, $data, "go", $null);
+    }
+    else {
+        blog($bid, "Purging all Kerberos tickets.");
+        $arg_data  = bof_pack($bid, "Z", $purge);
+        beacon_inline_execute($bid, $data, "go", $arg_data);
+    }
+}
