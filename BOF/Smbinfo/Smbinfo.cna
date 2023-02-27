@@ -19,7 +19,7 @@ alias Smbinfo {
     }
 
     # Read in the right BOF file
-    $handle = openf(script_resource("Smbinfo.o"));
+    $handle = openf(script_resource("Smbinfo." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

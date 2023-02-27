@@ -2,34 +2,41 @@
 
 #include <windows.h>
 
+#define AddEtype(n) { n, TEXT(#n) }
+
 #define KERB_ETYPE_AES128_CTS_HMAC_SHA1_96    17
 #define KERB_ETYPE_AES256_CTS_HMAC_SHA1_96    18
 
 typedef enum _KERB_PROTOCOL_MESSAGE_TYPE_BOF {
-    KerbQueryTicketCacheEx3MessageBof = 25
+	KerbQueryTicketCacheEx3MessageBof = 25
 } KERB_PROTOCOL_MESSAGE_TYPE_BOF, *PKERB_PROTOCOL_MESSAGE_TYPE_BOF;
 
 typedef struct _KERB_TICKET_CACHE_INFO_EX3_BOF {
-    UNICODE_STRING ClientName;
-    UNICODE_STRING ClientRealm;
-    UNICODE_STRING ServerName;
-    UNICODE_STRING ServerRealm;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
-    LARGE_INTEGER RenewTime;
-    LONG EncryptionType;
-    ULONG TicketFlags;
-    ULONG SessionKeyType;
-    ULONG BranchId;
-    ULONG CacheFlags;
-    UNICODE_STRING KdcCalled;
+	UNICODE_STRING ClientName;
+	UNICODE_STRING ClientRealm;
+	UNICODE_STRING ServerName;
+	UNICODE_STRING ServerRealm;
+	LARGE_INTEGER StartTime;
+	LARGE_INTEGER EndTime;
+	LARGE_INTEGER RenewTime;
+	LONG EncryptionType;
+	ULONG TicketFlags;
+	ULONG SessionKeyType;
+	ULONG BranchId;
+	ULONG CacheFlags;
+	UNICODE_STRING KdcCalled;
 } KERB_TICKET_CACHE_INFO_EX3_BOF, *PKERB_TICKET_CACHE_INFO_EX3_BOF;
 
 typedef struct _KERB_QUERY_TKT_CACHE_EX3_RESPONSE_BOF {
-    KERB_PROTOCOL_MESSAGE_TYPE MessageType;
-    ULONG CountOfTickets;
-    KERB_TICKET_CACHE_INFO_EX3_BOF Tickets[ANYSIZE_ARRAY];
+	KERB_PROTOCOL_MESSAGE_TYPE MessageType;
+	ULONG CountOfTickets;
+	KERB_TICKET_CACHE_INFO_EX3_BOF Tickets[ANYSIZE_ARRAY];
 } KERB_QUERY_TKT_CACHE_EX3_RESPONSE_BOF, *PKERB_QUERY_TKT_CACHE_EX3_RESPONSE_BOF;
+
+typedef struct _ETYPE {
+	INT etype;
+	LPCWSTR ename;
+} ETYPE;
 
 //MSVCRT
 WINBASEAPI int __cdecl MSVCRT$swprintf_s(wchar_t *buffer, size_t sizeOfBuffer, const wchar_t *format, ...);

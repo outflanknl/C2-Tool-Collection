@@ -10,7 +10,7 @@ alias Askcreds {
     $input = substr($0, 9);
 
     # Read in the right BOF file
-    $handle = openf(script_resource("Askcreds.o"));
+    $handle = openf(script_resource("Askcreds." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

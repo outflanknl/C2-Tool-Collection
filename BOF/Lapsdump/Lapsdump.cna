@@ -19,7 +19,7 @@ alias Lapsdump {
     }
 
     # Read in the right BOF file
-    $handle = openf(script_resource("Lapsdump.o"));
+    $handle = openf(script_resource("Lapsdump." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

@@ -13,7 +13,7 @@ alias klist {
     $purge = @args[0];
 
     # Read in the right BOF file
-    $handle = openf(script_resource("Klist.o"));
+    $handle = openf(script_resource("Klist." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

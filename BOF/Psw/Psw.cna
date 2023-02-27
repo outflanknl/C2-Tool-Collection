@@ -9,7 +9,7 @@ alias psw {
     $bid = $1;
 
     # Read in the right BOF file
-    $handle = openf(script_resource("Psw.o"));
+    $handle = openf(script_resource("Psw." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

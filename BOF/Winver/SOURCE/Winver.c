@@ -2,7 +2,11 @@
 #include <stdio.h>
 
 #include "Winver.h"
+#if defined(WOW64)
+#include "Syscalls-WoW64.h"
+#else
 #include "Syscalls.h"
+#endif
 #include "beacon.h"
 
 

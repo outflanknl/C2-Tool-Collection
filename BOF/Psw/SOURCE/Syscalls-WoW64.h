@@ -49,36 +49,6 @@ ExecuteSimpleSystemCallBase_Epilogue:                     \n\
     ret                                                   \n\
     ");
 
-__asm__("ZwQuerySystemInformation:                        \n\
-    mov eax, 0x033                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwQueryInformationProcess:                       \n\
-    mov eax, 0x016                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwOpenProcess:                                   \n\
-    mov eax, 0x023                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwAdjustPrivilegesToken:                         \n\
-    mov eax, 0x03E                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwQueryInformationToken:                         \n\
-    mov eax, 0x01E                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
 __asm__("ZwAllocateVirtualMemory:                         \n\
     mov eax, 0x015                                        \n\
     call ExecuteSimpleSystemCallBase                      \n\
@@ -91,26 +61,8 @@ __asm__("ZwFreeVirtualMemory:                             \n\
     ret                                                   \n\
     ");
 
-__asm__("ZwReadVirtualMemory:                             \n\
-    mov eax, 0x03C                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwWriteVirtualMemory:                            \n\
-    mov eax, 0x037                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwCreateFile:                                    \n\
-    mov eax, 0x052                                        \n\
-    call ExecuteSimpleSystemCallBase                      \n\
-    ret                                                   \n\
-    ");
-
-__asm__("ZwClose:                                         \n\
-    mov eax, 0x00C                                        \n\
+__asm__("ZwQuerySystemInformation:                        \n\
+    mov eax, 0x033                                        \n\
     call ExecuteSimpleSystemCallBase                      \n\
     ret                                                   \n\
     ");

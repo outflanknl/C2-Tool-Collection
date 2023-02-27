@@ -10,36 +10,36 @@
 
 //CREDUI
 DECLSPEC_IMPORT DWORD WINAPI CREDUI$CredUIPromptForWindowsCredentialsW(
-    PCREDUI_INFOW pUiInfo,
-    DWORD dwAuthError,
-    ULONG *pulAuthPackage,
-    LPCVOID pvInAuthBuffer,
-    ULONG ulInAuthBufferSize,
-    LPVOID *ppvOutAuthBuffer,
-    ULONG *pulOutAuthBufferSize,
-    BOOL *pfSave,
-    DWORD dwFlags
-    );
+	PCREDUI_INFOW pUiInfo,
+	DWORD dwAuthError,
+	ULONG *pulAuthPackage,
+	LPCVOID pvInAuthBuffer,
+	ULONG ulInAuthBufferSize,
+	LPVOID *ppvOutAuthBuffer,
+	ULONG *pulOutAuthBufferSize,
+	BOOL *pfSave,
+	DWORD dwFlags
+	);
 
 DECLSPEC_IMPORT BOOL WINAPI CREDUI$CredUnPackAuthenticationBufferW(
-    DWORD dwFlags,
-    PVOID pAuthBuffer,
-    DWORD cbAuthBuffer,
-    LPWSTR pszUserName,
-    DWORD *pcchMaxUserName,
-    LPWSTR pszDomainName,
-    DWORD *pcchMaxDomainName,
-    LPWSTR pszPassword,
-    DWORD *pcchMaxPassword
-    );
+	DWORD dwFlags,
+	PVOID pAuthBuffer,
+	DWORD cbAuthBuffer,
+	LPWSTR pszUserName,
+	DWORD *pcchMaxUserName,
+	LPWSTR pszDomainName,
+	DWORD *pcchMaxDomainName,
+	LPWSTR pszPassword,
+	DWORD *pcchMaxPassword
+	);
 
 DECLSPEC_IMPORT BOOL WINAPI CREDUI$CredPackAuthenticationBufferW(
-    DWORD dwFlags,
-    LPWSTR pszUserName,
-    LPWSTR pszPassword,
-    PBYTE pPackedCredentials,
-    DWORD *pcbPackedCredentials
-    );
+	DWORD dwFlags,
+	LPWSTR pszUserName,
+	LPWSTR pszPassword,
+	PBYTE pPackedCredentials,
+	DWORD *pcbPackedCredentials
+	);
 
 //KERNEL32
 WINBASEAPI HANDLE WINAPI KERNEL32$CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId);
@@ -67,6 +67,7 @@ WINUSERAPI WINBOOL USER32$PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARA
 WINUSERAPI HWND USER32$GetForegroundWindow();
 WINUSERAPI DWORD USER32$GetWindowThreadProcessId(HWND hWnd, LPDWORD lpdwProcessId);
 WINUSERAPI LONG_PTR USER32$GetWindowLongPtrA(HWND hWnd, int  nIndex);
+WINUSERAPI LONG_PTR USER32$GetWindowLongA(HWND hWnd, int  nIndex);
 
 //SECUR32
 WINBASEAPI BOOLEAN WINAPI SECUR32$GetUserNameExW(EXTENDED_NAME_FORMAT NameFormat, LPWSTR lpNameBuffer, PULONG nSize);

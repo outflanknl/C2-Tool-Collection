@@ -30,7 +30,7 @@ alias PetitPotam {
     }
     
     # Read in the right BOF file
-    $handle = openf(script_resource("PetitPotam.o"));
+    $handle = openf(script_resource("PetitPotam." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

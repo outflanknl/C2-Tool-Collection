@@ -24,9 +24,9 @@ void GenRandomStringW(LPWSTR lpFileName, INT len) {
 }
 
 void GetFormattedErrMsg(_In_ HRESULT hr) {
-    LPWSTR lpwErrorMsg = NULL;
+	LPWSTR lpwErrorMsg = NULL;
 
-    KERNEL32$FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,  
+	KERNEL32$FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,  
 	NULL,
 	(DWORD)hr,
 	MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
@@ -42,7 +42,7 @@ void GetFormattedErrMsg(_In_ HRESULT hr) {
 		BeaconPrintf(CALLBACK_ERROR, "HRESULT 0x%08lx", hr);
 	}
 
-    return;
+	return;
 }
 
 HRESULT CreateMachineAccount(_In_ LPCWSTR lpwComputername, _In_ LPCWSTR lpwPassword) {

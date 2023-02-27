@@ -40,15 +40,15 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 				"Version: %d.%d, " 
 				"Name: %ls, " 
 				"Domain: %ls\n", pBuf->wki100_platform_id, pBuf->wki100_ver_major, pBuf->wki100_ver_minor, pBuf->wki100_computername, pBuf->wki100_langroup);
-    	}
+		}
 		else {
 			BeaconPrintf(CALLBACK_ERROR, "A system error has occurred: %d\n", nStatus);
 		}
 	}
 
 	if (pBuf != NULL) {
-        NetApiBufferFree(pBuf);
-    }
+		NetApiBufferFree(pBuf);
+	}
 
 	return;
 }

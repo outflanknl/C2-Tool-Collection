@@ -11,7 +11,7 @@
 
 #define MAX_SEC_PRD 20
 #define MAX_NAME 256
-#define MAX_STRING 8192
+#define MAX_STRING 18192
 
 INT g_iGarbage = 1;
 LPSTREAM g_lpStream = (LPSTREAM)1;

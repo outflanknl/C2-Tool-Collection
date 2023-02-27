@@ -12,18 +12,18 @@ __asm__("ExecuteSimpleSystemCallBase:                     \n\
     mov ebp, esp                                          \n\
     mov ecx, fs:[0x30]                                    \n\
 ExecuteSimpleSystemCallBase_Check_X_X_XXXX:               \n\
-    cmp dword ptr [ecx+0x0A4], 10                         \n\
+    cmp word ptr [ecx+0x0A4], 10                          \n\
     je  ExecuteSimpleSystemCallBase_SystemCall_10_0_XXXX  \n\
-    cmp dword ptr [ecx+0x0A4], 6                          \n\
+    cmp word ptr [ecx+0x0A4], 6                           \n\
     jne  ExecuteSimpleSystemCallBase_Epilogue             \n\
 ExecuteSimpleSystemCallBase_Check_6_X_XXXX:               \n\
-    cmp dword ptr [ecx+0x0A8], 3                          \n\
+    cmp word ptr [ecx+0x0A8], 3                           \n\
     je  ExecuteSimpleSystemCallBase_SystemCall_6_3_XXXX   \n\
-    cmp dword ptr [ecx+0x0A8], 2                          \n\
+    cmp word ptr [ecx+0x0A8], 2                           \n\
     je  ExecuteSimpleSystemCallBase_SystemCall_6_2_XXXX   \n\
-    cmp dword ptr [ecx+0x0A8], 1                          \n\
+    cmp word ptr [ecx+0x0A8], 1                           \n\
     jne  ExecuteSimpleSystemCallBase_Epilogue             \n\
-    cmp dword ptr [ecx+0x0AC], 7601                       \n\
+    cmp word ptr [ecx+0x0AC], 7601                        \n\
     je  ExecuteSimpleSystemCallBase_SystemCall_6_1_7601   \n\
     jmp ExecuteSimpleSystemCallBase_Epilogue              \n\
 ExecuteSimpleSystemCallBase_SystemCall_10_0_XXXX:         \n\

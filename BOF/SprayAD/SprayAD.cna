@@ -23,7 +23,7 @@ alias SprayAD {
 	}
     
     # Read in the right BOF file
-    $handle = openf(script_resource("SprayAD.o"));
+    $handle = openf(script_resource("SprayAD." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

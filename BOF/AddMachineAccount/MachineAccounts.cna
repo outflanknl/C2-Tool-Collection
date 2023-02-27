@@ -17,7 +17,7 @@ alias GetMachineAccountQuota {
     $bid = $1;
 
     # Read in the right BOF file
-    $handle = openf(script_resource("GetMachineAccountQuota.o"));
+    $handle = openf(script_resource("GetMachineAccountQuota." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 
@@ -39,7 +39,7 @@ alias AddMachineAccount {
     }
 
     # Read in the right BOF file
-    $handle = openf(script_resource("AddMachineAccount.o"));
+    $handle = openf(script_resource("AddMachineAccount." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 
@@ -68,7 +68,7 @@ alias DelMachineAccount {
     }
 
     # Read in the right BOF file
-    $handle = openf(script_resource("DelMachineAccount.o"));
+    $handle = openf(script_resource("DelMachineAccount." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

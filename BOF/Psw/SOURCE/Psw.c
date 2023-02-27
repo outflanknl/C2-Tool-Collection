@@ -1,16 +1,21 @@
 #include <windows.h>
 
+#if defined(WOW64)
+#include "Syscalls-WoW64.h"
+#else
 #include "Syscalls.h"
+#endif
 #include "beacon.h"
 #include "Psw.h"
+
+#define MAX_NAME 8192
 
 
 BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 	NTSTATUS status;
 	DWORD dwProcessId = 0;
-	CHAR chWindowTitle[2048];
+	PCHAR pWindowTitle = NULL;
 	LPVOID pBuffer = NULL;
-	SIZE_T uSize = 0;
 
 	if (!hWnd) {
 		return TRUE;
@@ -20,9 +25,13 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 		return TRUE;
 	}
 
-	MSVCRT$memset(chWindowTitle, 0, sizeof(chWindowTitle));
-	if (!USER32$SendMessageA(hWnd, WM_GETTEXT, sizeof(chWindowTitle), (LPARAM)chWindowTitle)){
-		return TRUE;
+	pWindowTitle = KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, MAX_NAME);
+	if (pWindowTitle == NULL) {
+		goto CleanUp;
+	}
+
+	if (!USER32$SendMessageA(hWnd, WM_GETTEXT, MAX_NAME, (LPARAM)pWindowTitle)) {
+		goto CleanUp;
 	}
 
 	USER32$GetWindowThreadProcessId(hWnd, &dwProcessId);
@@ -31,12 +40,11 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 		ULONG uReturnLength = 0;
 		status = ZwQuerySystemInformation(SystemProcessInformation, 0, 0, &uReturnLength);
 		if (!status == STATUS_INFO_LENGTH_MISMATCH) {
-			return TRUE;
+			goto CleanUp;
 		}
-
-		uSize = uReturnLength;
-		status = ZwAllocateVirtualMemory(NtCurrentProcess(), &pBuffer, 0, &uSize, MEM_COMMIT, PAGE_READWRITE);
-		if (status != STATUS_SUCCESS) {
+		
+		pBuffer = KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, uReturnLength);
+		if (pBuffer == NULL) {
 			goto CleanUp;
 		}
 
@@ -53,7 +61,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 				BeaconPrintf(CALLBACK_OUTPUT,
 					"[+] ProcessName:\t %wZ\n"
 					"    ProcessID:\t %d\n"
-					"    WindowTitle:\t %s\n", &pProcInfo->ProcessName, dwProcessId, chWindowTitle);
+					"    WindowTitle:\t %s\n", &pProcInfo->ProcessName, dwProcessId, pWindowTitle);
 				break;
 			}
 			else if (pProcInfo->NextEntryDelta == 0) {
@@ -66,8 +74,12 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 
 CleanUp:
 
+	if (pWindowTitle != NULL) {
+		KERNEL32$HeapFree(KERNEL32$GetProcessHeap(), 0, pWindowTitle);
+	}
+
 	if (pBuffer != NULL) {
-		status = ZwFreeVirtualMemory(NtCurrentProcess(), &pBuffer, &uSize, MEM_RELEASE);
+		KERNEL32$HeapFree(KERNEL32$GetProcessHeap(), 0, pBuffer);
 	}
 
 	return TRUE;

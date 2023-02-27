@@ -1,3 +1,11 @@
+#ifdef __MINGW32__
+#if(_WIN32_WINNT >= 0x0601)
+#else
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0601
+#endif
+#endif
+
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <iphlpapi.h>

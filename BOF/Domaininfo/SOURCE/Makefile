@@ -1,15 +1,19 @@
-BOF := Domaininfo
+SRC = $(wildcard *.c)
+OBJS = $(patsubst %.c, %.o, $(SRC))
 CC_x86 := i686-w64-mingw32-gcc
 CC_x64 := x86_64-w64-mingw32-gcc
 STRIP_x86 := i686-w64-mingw32-strip
 STRIP_x64 := x86_64-w64-mingw32-strip
+CFLAGS := -masm=intel
 
-all:
-	$(CC_x64) -o ../$(BOF).x64.o -c $(BOF).c
-	$(STRIP_x64) --strip-unneeded ../$(BOF).x64.o
-	
-	$(CC_x86) -o ../$(BOF).x86.o -c $(BOF).c
-	$(STRIP_x86) --strip-unneeded ../$(BOF).x86.o
+all: $(OBJS)
+
+%.o: %.c
+	$(CC_x64) $(CFLAGS) -o ../$*.x64.o -c $<
+	$(STRIP_x64) --strip-unneeded ../$*.x64.o
+
+	$(CC_x86) $(CFLAGS) -o ../$*.x86.o -DWOW64 -fno-leading-underscore -c $<
+	$(STRIP_x86) --strip-unneeded ../$*.x86.o
 
 clean:
-	rm ../$(BOF).*.o
+	rm ../*.o

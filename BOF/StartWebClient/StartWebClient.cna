@@ -10,7 +10,7 @@ alias StartWebClient {
     $bid = $1;
 
     # Read in the right BOF file
-    $handle = openf(script_resource("StartWebClient.o"));
+    $handle = openf(script_resource("StartWebClient." . barch($bid) . ".o"));
     $data   = readb($handle, -1);
     closef($handle);
 

@@ -257,7 +257,7 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 		}
 
         uSalt.MaximumLength = (USHORT)MSVCRT$wcslen(uSalt.Buffer) * sizeof(WCHAR);
-		BeaconPrintToStreamW(L"[+] Salt\t\t\t\t: %wZ\n", uSalt);
+		BeaconPrintToStreamW(L"[+] Salt\t\t\t\t: %wZ\n", &uSalt);
 
         uPasswordWithSalt.Buffer = NULL;
 		uPasswordWithSalt.MaximumLength = uPassword.Length + uSalt.Length + sizeof(WCHAR);
