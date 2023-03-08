@@ -7,10 +7,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class PetitPotamBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__(
-            "PetitPotam",
-            supported_architectures=[ImplantArch.INTEL_X64],
-        )
+        super().__init__("PetitPotam")
 
         self.parser.description = (
             "Coerce Windows hosts to authenticate to other machines via MS-EFSRPC."

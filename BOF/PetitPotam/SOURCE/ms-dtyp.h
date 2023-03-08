@@ -141,9 +141,9 @@ typedef __int64 LONGLONG;
 
 typedef LONG HRESULT;
 
-typedef /* [custom] */ __int3264 LONG_PTR;
+//typedef /* [custom] */ __int3264 LONG_PTR;
 
-typedef /* [custom] */ unsigned __int3264 ULONG_PTR;
+//typedef /* [custom] */ unsigned __int3264 ULONG_PTR;
 
 typedef int LONG32;
 

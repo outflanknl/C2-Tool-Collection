@@ -16,7 +16,7 @@ class AskCredsBOF(BaseBOFTask):
 
         self.parser.add_argument(
             "reason",
-            help="This reason is displayed as part of the prompt.",
+            help="This reason is displayed as part of the prompt (default: Restore Network Connection).",
             nargs=argparse.REMAINDER,
         )
 

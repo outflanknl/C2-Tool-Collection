@@ -56,7 +56,9 @@ class SprayAD(BaseBOFTask):
 
         return arguments
 
-    def _encode_arguments_bof(self, arguments: List[str]) -> List[Tuple[BOFArgumentEncoding, str]]:
+    def _encode_arguments_bof(
+        self, arguments: List[str]
+    ) -> List[Tuple[BOFArgumentEncoding, str]]:
         parser_arguments = self.parser.parse_args(arguments)
 
         encoded_arguments = [
@@ -75,5 +77,7 @@ class SprayAD(BaseBOFTask):
     def run(self, arguments: List[str]):
         parser_arguments = self.parser.parse_args(arguments)
 
-        self.append_response(f'Let\'s start spraying user accounts with password "{parser_arguments.password}"\n\n')
+        self.append_response(
+            f'Let\'s start spraying user accounts with password "{parser_arguments.password}"\n\n'
+        )
         super().run(arguments)
