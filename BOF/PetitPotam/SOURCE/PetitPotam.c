@@ -92,13 +92,13 @@ EXTERN_C void __RPC_USER midl_user_free(void __RPC_FAR* ptr) {
 	MSVCRT$free(ptr);
 }
 
-#if defined(WOW64)
 long EfsRpcOpenFileRaw(
 	/* [in] */ handle_t binding_h,
 	/* [out] */ PEXIMPORT_CONTEXT_HANDLE *hContext,
 	/* [string][in] */ wchar_t *FileName,
 	/* [in] */ long Flags)
 {
+
 	CLIENT_CALL_RETURN _RetVal;
 	RPC_BINDING_HANDLE efsrpc__MIDL_AutoBindHandle;
 
@@ -139,114 +139,12 @@ long EfsRpcOpenFileRaw(
 		0
 		};
 
+#if defined(WOW64)
 	_RetVal = RPCRT4$NdrClientCall2(
 		(PMIDL_STUB_DESC)&efsrpc_StubDesc,
 		(PFORMAT_STRING)&ms2Defsrpc__MIDL_ProcFormatString.Format[0],
 		(unsigned char*)&binding_h);
-
-	return (long)_RetVal.Simple;
-}
-
-DWORD EfsRpcQueryRecoveryAgents(
-	/* [in] */ handle_t binding_h,
-	/* [string][in] */ wchar_t *FileName,
-	/* [out] */ ENCRYPTION_CERTIFICATE_HASH_LIST **RecoveryAgents)
-{
-	CLIENT_CALL_RETURN _RetVal;
-	RPC_BINDING_HANDLE efsrpc__MIDL_AutoBindHandle;
-
-	const RPC_CLIENT_INTERFACE efsrpc___RpcClientInterface =
-		{
-		sizeof(RPC_CLIENT_INTERFACE),
-		{{0xc681d488,0xd850,0x11d0,{0x8c,0x52,0x00,0xc0,0x4f,0xd9,0x0f,0x7e}},{1,0}},
-		{{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}},
-		0,
-		0,
-		0,
-		0,
-		0,
-		0x00000001
-		};
-
-	const MIDL_STUB_DESC efsrpc_StubDesc = 
-		{
-		(void *)& efsrpc___RpcClientInterface,
-		MIDL_user_allocate,
-		MIDL_user_free,
-		&efsrpc__MIDL_AutoBindHandle,
-		0,
-		0,
-		0,
-		0,
-		ms2Defsrpc__MIDL_TypeFormatString.Format,
-		1, /* -error bounds_check flag */
-		0x50002, /* Ndr library version */
-		0,
-		0x801026e, /* MIDL Version 8.1.622 */
-		0,
-		0,
-		0,  /* notify & notify_flag routine table */
-		0x1, /* MIDL flag */
-		0, /* cs routines */
-		0,   /* proxy/server info */
-		0
-		};
-
-	_RetVal = RPCRT4$NdrClientCall2(
-		(PMIDL_STUB_DESC)&efsrpc_StubDesc,
-		(PFORMAT_STRING)&ms2Defsrpc__MIDL_ProcFormatString.Format[316],
-		(unsigned char*)&binding_h);
-
-	return (DWORD)_RetVal.Simple;
-}
 #else
-long EfsRpcOpenFileRaw( 
-	/* [in] */ handle_t binding_h,
-	/* [out] */ PEXIMPORT_CONTEXT_HANDLE *hContext,
-	/* [string][in] */ wchar_t *FileName,
-	/* [in] */ long Flags)
-{
-
-	CLIENT_CALL_RETURN _RetVal;
-	RPC_BINDING_HANDLE efsrpc__MIDL_AutoBindHandle;
-
-	const RPC_CLIENT_INTERFACE efsrpc___RpcClientInterface =
-		{
-		sizeof(RPC_CLIENT_INTERFACE),
-		{{0xc681d488,0xd850,0x11d0,{0x8c,0x52,0x00,0xc0,0x4f,0xd9,0x0f,0x7e}},{1,0}},
-		{{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}},
-		0,
-		0,
-		0,
-		0,
-		0,
-		0x00000001
-		};
-
-	const MIDL_STUB_DESC efsrpc_StubDesc = 
-		{
-		(void *)& efsrpc___RpcClientInterface,
-		MIDL_user_allocate,
-		MIDL_user_free,
-		&efsrpc__MIDL_AutoBindHandle,
-		0,
-		0,
-		0,
-		0,
-		ms2Defsrpc__MIDL_TypeFormatString.Format,
-		1, /* -error bounds_check flag */
-		0x50002, /* Ndr library version */
-		0,
-		0x801026e, /* MIDL Version 8.1.622 */
-		0,
-		0,
-		0,  /* notify & notify_flag routine table */
-		0x1, /* MIDL flag */
-		0, /* cs routines */
-		0,   /* proxy/server info */
-		0
-		};
-
 	_RetVal = RPCRT4$NdrClientCall2(
 		(PMIDL_STUB_DESC)&efsrpc_StubDesc,
 		(PFORMAT_STRING)&ms2Defsrpc__MIDL_ProcFormatString.Format[0],
@@ -254,6 +152,7 @@ long EfsRpcOpenFileRaw(
 		hContext,
 		FileName,
 		Flags);
+#endif
 
 	return (long)_RetVal.Simple;
 }
@@ -304,16 +203,22 @@ DWORD EfsRpcQueryRecoveryAgents(
 		0
 		};
 
+#if defined(WOW64)
+	_RetVal = RPCRT4$NdrClientCall2(
+		(PMIDL_STUB_DESC)&efsrpc_StubDesc,
+		(PFORMAT_STRING)&ms2Defsrpc__MIDL_ProcFormatString.Format[316],
+		(unsigned char*)&binding_h);
+#else
 	_RetVal = RPCRT4$NdrClientCall2(
 		(PMIDL_STUB_DESC)&efsrpc_StubDesc,
 		(PFORMAT_STRING)&ms2Defsrpc__MIDL_ProcFormatString.Format[330],
 		binding_h,
 		FileName,
 		RecoveryAgents);
+#endif
 
 	return (DWORD)_RetVal.Simple;
 }
-#endif
 
 RPC_STATUS CreateBindingHandle(_In_ LPWSTR lpwTarget, _Out_ RPC_BINDING_HANDLE* binding_handle) {
 	RPC_STATUS rStatus;
