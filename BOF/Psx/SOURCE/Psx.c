@@ -343,7 +343,7 @@ CleanUp:
 }
 
 BOOL EnumSecurityProc(_In_ LPWSTR lpCompany, _In_ LPWSTR lpDescription, _In_ DWORD dwPID) {
-	LPCWSTR pwszCompany[28];
+	LPCWSTR pwszCompany[29];
 	pwszCompany[0] = L"ESET";
 	pwszCompany[1] = L"McAfee";
 	pwszCompany[2] = L"Symantec";
@@ -372,6 +372,7 @@ BOOL EnumSecurityProc(_In_ LPWSTR lpCompany, _In_ LPWSTR lpDescription, _In_ DWO
 	pwszCompany[25] = L"Ivanti";
 	pwszCompany[26] = L"Dominik Reichl"; //KeePass
 	pwszCompany[27] = L"Darktrace";
+	pwszCompany[28] = L"Trellix";
 
 	const DWORD dwSize = _countof(pwszCompany);
 	for (DWORD i = 0; i < dwSize && g_dwSecProcCount < MAX_SEC_PRD; i++) {
