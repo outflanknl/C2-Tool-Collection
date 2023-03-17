@@ -24,7 +24,9 @@ The toolset currently consists of the following tools:
 |**[Psc](BOF/Psc)**|Show detailed information from processes with established TCP and RDP connections.|
 |**[Psw](BOF/Psw)**|Show window titles from processes with active windows.|
 |**[Psx](BOF/Psx)**|Show detailed information from all processes running on the system and provides a summary of installed security products and tools.|
+|**[Psm](BOF/Psm)**|Show detailed information from a specific process id (loaded modules, tcp connections e.g.).|
 |**[Psk](BOF/Psk)**|Show detailed information from the windows kernel and loaded driver modules and provides a summary of installed security products (AV/EDR drivers).|
+|**[ReconAD](BOF/ReconAD)**|Use ADSI to query Active Directory objects and attributes.|
 |**[Smbinfo](BOF/Smbinfo)**|Gather remote system version info using the NetWkstaGetInfo API without having to run the Cobalt Strike port (tcp-445) scanner.|
 |**[SprayAD](BOF/SprayAD)**|Perform a fast Kerberos or LDAP password spraying attack against Active Directory.|
 |**[StartWebClient](BOF/StartWebClient)**|Start the WebClient Service programmatically from user context using a service trigger.|
