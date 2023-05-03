@@ -16,6 +16,7 @@ The toolset currently consists of the following tools:
 |**[Askcreds](BOF/Askcreds)**|Collect passwords by simply asking.|
 |**[CVE-2022-26923](BOF/CVE-2022-26923)**|CVE-2022-26923 Active Directory (ADCS) Domain Privilege Escalation exploit.|
 |**[Domaininfo](BOF/Domaininfo)**|Enumerate domain information using Active Directory Domain Services.|
+|**[FindObjects](BOF/FindObjects)**|Enumerate processes for specific loaded modules or process handles.|
 |**[Kerberoast](BOF/Kerberoast)**|List all SPN enabled user/service accounts or request service tickets (TGS-REP) which can be cracked offline using HashCat.|
 |**[KerbHash](BOF/KerbHash)**|Hash password to kerberos keys (rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1, and des_cbc_md5).|
 |**[Klist](BOF/Klist)**|Displays a list of currently cached Kerberos tickets.|
@@ -30,6 +31,7 @@ The toolset currently consists of the following tools:
 |**[Smbinfo](BOF/Smbinfo)**|Gather remote system version info using the NetWkstaGetInfo API without having to run the Cobalt Strike port (tcp-445) scanner.|
 |**[SprayAD](BOF/SprayAD)**|Perform a fast Kerberos or LDAP password spraying attack against Active Directory.|
 |**[StartWebClient](BOF/StartWebClient)**|Start the WebClient Service programmatically from user context using a service trigger.|
+|**[WdToggle](BOF/WdToggle)**|Patch lsass to enable WDigest credential caching and to circumvent Credential Guard (if enabled).|
 |**[Winver](BOF/Winver)**|Display the version of Windows that is running, the build number and patch release (Update Build Revision).|
 
 ***Others***
