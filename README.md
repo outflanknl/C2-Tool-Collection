@@ -39,6 +39,7 @@ The toolset currently consists of the following tools:
 |Name|Decription|
 |----|----------|
 |**[PetitPotam](Other/PetitPotam)**|Reflective DLL implementation of the PetitPotam attack published by [@topotam77](https://twitter.com/topotam77)|
+|**[RemotePipeList](Other/RemotePipeList)**|.NET tool to enumerate remote named pipes|
 
 ## How to use
 1. Clone this repository.
