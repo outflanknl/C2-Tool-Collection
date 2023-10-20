@@ -17,7 +17,7 @@ Local pipe listing is possible using built-in Windows APIs, SysInternal's PipeLi
 
 However, remote pipe listing is a bit more challenging. While impacket bundles `smbclient.py` which can handle listing remote named pipes, no tool existed (that I know of) that could be executed through an implant.
 
-For more information, see [https://outflank.nl/blog/2023/10/10/listing-remote-named-pipes/](https://outflank.nl/blog/2023/10/10/listing-remote-named-pipes/).
+For more information, see [https://outflank.nl/blog/2023/10/19/listing-remote-named-pipes/](https://outflank.nl/blog/2023/10/19/listing-remote-named-pipes/).
 
 ## License
 
