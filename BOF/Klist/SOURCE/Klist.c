@@ -114,6 +114,19 @@ VOID ShowNTError(LPCWSTR szAPI, NTSTATUS Status) {
 	ShowLastError(szAPI, ADVAPI32$LsaNtStatusToWinError(Status));
 }
 
+VOID PrintKerbName(PKERB_EXTERNAL_NAME Name) {
+	ULONG Index = 0;
+	
+	for (Index = 0; Index < Name->NameCount ; Index++ ) {
+		BeaconPrintToStreamW(L"%wZ",&Name->Names[Index]);
+		if ((Index+1) < Name->NameCount){
+			BeaconPrintToStreamW(L"/");
+		}
+	}
+
+	BeaconPrintToStreamW(L"\n");
+}
+
 VOID PrintTime(LPCWSTR Comment, TimeStamp ConvertTime) {
 	BeaconPrintToStreamW(L"%ls", Comment);
 
@@ -387,23 +400,123 @@ BOOL PackageConnectLookup(HANDLE* pLogonHandle, ULONG* pPackageId) {
 	return TRUE;
 }
 
+BOOL GetEncodedTicket(HANDLE LogonHandle, ULONG PackageId, LPCWSTR lpwTargetSpn) {
+	NTSTATUS Status;
+	NTSTATUS SubStatus;
+	PKERB_RETRIEVE_TKT_REQUEST CacheRequest = NULL;
+	PKERB_RETRIEVE_TKT_RESPONSE CacheResponse = NULL;
+	PKERB_EXTERNAL_TICKET Ticket = NULL;
+	ULONG ResponseSize = 0;
+	BOOLEAN bTrusted = TRUE;
+	BOOLEAN bSuccess = FALSE;
+	UNICODE_STRING uTarget = { 0 }; 
+	UNICODE_STRING uTarget2 = { 0 };
+
+	_RtlInitUnicodeString RtlInitUnicodeString = (_RtlInitUnicodeString)
+		GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlInitUnicodeString");
+	if (RtlInitUnicodeString == NULL) {
+		BeaconPrintf(CALLBACK_ERROR, "GetProcAddress failed.");
+		return FALSE;
+	}
+
+	RtlInitUnicodeString(&uTarget2, lpwTargetSpn);
+
+	CacheRequest = (PKERB_RETRIEVE_TKT_REQUEST)
+		KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, uTarget2.Length + sizeof(KERB_RETRIEVE_TKT_REQUEST));
+
+	CacheRequest->MessageType = KerbRetrieveEncodedTicketMessage;
+	CacheRequest->LogonId.LowPart = 0;
+	CacheRequest->LogonId.HighPart = 0;
+
+	uTarget.Buffer = (LPWSTR)(CacheRequest + 1);
+	uTarget.Length = uTarget2.Length;
+	uTarget.MaximumLength = uTarget2.MaximumLength;
+
+	MSVCRT$wcscpy_s(uTarget.Buffer, uTarget2.Length, uTarget2.Buffer);
+
+	CacheRequest->TargetName = uTarget;
+
+	Status = SECUR32$LsaCallAuthenticationPackage(
+		LogonHandle,
+		PackageId,
+		CacheRequest,
+		uTarget2.Length + sizeof(KERB_RETRIEVE_TKT_REQUEST),
+		(PVOID*)&CacheResponse,
+		&ResponseSize,
+		&SubStatus
+		);
+
+	if (!SEC_SUCCESS(Status) || !SEC_SUCCESS(SubStatus)) {
+		ShowNTError(L"LsaCallAuthenticationPackage", Status);
+		BeaconPrintf(CALLBACK_ERROR, "Substatus: 0x%x\n", SubStatus);
+		ShowNTError(L"Substatus:", SubStatus);
+	}
+	else{
+		Ticket = &(CacheResponse->Ticket);
+		BeaconPrintToStreamW(L"\nEncoded Ticket:\n\n");
+		BeaconPrintToStreamW(L"#0>\tServiceName: "); PrintKerbName(Ticket->ServiceName);
+		BeaconPrintToStreamW(L"\tTargetName: "); PrintKerbName(Ticket->TargetName);
+		BeaconPrintToStreamW(L"\tClientName: "); PrintKerbName(Ticket->ClientName);
+		
+		BeaconPrintToStreamW(L"\tDomainName: %wZ\n", &Ticket->DomainName);
+		BeaconPrintToStreamW(L"\tTargetDomainName: %wZ\n", &Ticket->TargetDomainName);
+		BeaconPrintToStreamW(L"\tAltTargetDomainName: %wZ\n", &Ticket->AltTargetDomainName);
+
+		BeaconPrintToStreamW(L"\tTicketFlags: (0x%x) ", Ticket->TicketFlags);
+		PrintTktFlags(Ticket->TicketFlags);
+		PrintTime(L"\tKeyExpirationTime: ", Ticket->KeyExpirationTime);
+		PrintTime(L"\tStartTime: ", Ticket->StartTime);
+		PrintTime(L"\tEndTime: ", Ticket->EndTime);
+		PrintTime(L"\tRenewUntil: ", Ticket->RenewUntil);
+		PrintTime(L"\tTimeSkew: ", Ticket->TimeSkew);
+		PrintEType(Ticket->SessionKey.KeyType, FALSE);
+
+		bSuccess = TRUE;
+		BeaconPrintToStreamW(L"\nA ticket to %ls has been retrieved successfully.\n", lpwTargetSpn);
+
+		//Print final Output
+		BeaconOutputStreamW();
+	}
+
+	if (CacheResponse != NULL) {
+		SECUR32$LsaFreeReturnBuffer(CacheResponse);
+	}
+	
+	if (CacheRequest != NULL) {
+		KERNEL32$HeapFree(KERNEL32$GetProcessHeap(), 0, CacheRequest);
+	}
+
+	return bSuccess;
+}
+
 VOID go(IN PCHAR Args, IN ULONG Length) {
 	HANDLE LogonHandle = NULL;
 	ULONG PackageId;
-	LPCWSTR lpwPurge = NULL;
+	LPCWSTR lpwCommand = NULL;
+	LPCWSTR lpwTargetSpn = NULL;
+	BOOL bGetTicket = FALSE;
 	BOOL bPurge = FALSE;
 
 	// Parse Arguments
 	datap parser;
 	BeaconDataParse(&parser, Args, Length);
 
-	lpwPurge = (WCHAR*)BeaconDataExtract(&parser, NULL);
-	if (MSVCRT$_wcsicmp(lpwPurge, L"purge") == 0) {
+	lpwCommand = (WCHAR*)BeaconDataExtract(&parser, NULL);
+	if (MSVCRT$_wcsicmp(lpwCommand, L"purge") == 0) {
 		bPurge = TRUE;
 	}
-
+	else if (MSVCRT$_wcsicmp(lpwCommand, L"get") == 0) {
+		lpwTargetSpn = (WCHAR*)BeaconDataExtract(&parser, NULL);
+		bGetTicket = TRUE;
+	}
+	
 	if (PackageConnectLookup(&LogonHandle, &PackageId)) {
-		ShowTickets(LogonHandle, PackageId, bPurge);
+		if (bGetTicket && lpwTargetSpn != NULL) {
+			GetEncodedTicket(LogonHandle, PackageId, lpwTargetSpn);
+		}
+		else {
+			ShowTickets(LogonHandle, PackageId, bPurge);
+		}
 	}
 
 	if (LogonHandle != NULL) {

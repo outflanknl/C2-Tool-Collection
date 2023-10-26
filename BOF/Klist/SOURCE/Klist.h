@@ -72,3 +72,8 @@ WINBASEAPI NTSTATUS WINAPI SECUR32$LsaLookupAuthenticationPackage(HANDLE LsaHand
 WINBASEAPI NTSTATUS WINAPI SECUR32$LsaCallAuthenticationPackage(HANDLE LsaHandle, ULONG AuthenticationPackage, PVOID ProtocolSubmitBuffer, ULONG SubmitBufferLength, PVOID *ProtocolReturnBuffer, PULONG ReturnBufferLength, PNTSTATUS ProtocolStatus);
 WINBASEAPI NTSTATUS WINAPI SECUR32$LsaFreeReturnBuffer(PVOID Buffer);
 WINBASEAPI NTSTATUS WINAPI SECUR32$LsaDeregisterLogonProcess(HANDLE LsaHandle);
+
+typedef void (WINAPI* _RtlInitUnicodeString)(
+	PUNICODE_STRING DestinationString,
+	PCWSTR SourceString
+	);
