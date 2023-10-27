@@ -16,9 +16,11 @@ WINBASEAPI DWORD WINAPI KERNEL32$GetLastError (VOID);
 WINBASEAPI void * WINAPI KERNEL32$HeapAlloc (HANDLE hHeap, DWORD dwFlags, SIZE_T dwBytes);
 WINBASEAPI HANDLE WINAPI KERNEL32$GetProcessHeap();
 WINBASEAPI BOOL WINAPI KERNEL32$HeapFree (HANDLE, DWORD, PVOID);
+DECLSPEC_IMPORT HGLOBAL KERNEL32$GlobalFree(HGLOBAL hMem);
 
 //MSVCRT
 WINBASEAPI int __cdecl MSVCRT$swprintf_s(wchar_t *buffer, size_t sizeOfBuffer, const wchar_t *format, ...);
+WINBASEAPI int __cdecl MSVCRT$_wcsicmp(const wchar_t *_Str1, const wchar_t *_Str2);
 
 #define InitializeObjectAttributes( i, o, a, r, s ) {    \
       (i)->Length = sizeof( OBJECT_ATTRIBUTES );         \
@@ -233,4 +235,8 @@ EXTERN_C NTSTATUS ZwClose(
 typedef void (WINAPI* _RtlInitUnicodeString)(
 	PUNICODE_STRING DestinationString,
 	PCWSTR SourceString
+	);
+
+typedef	LPWSTR (WINAPI* _BrandingFormatString)(
+	IN PCWSTR pstrFormat
 	);

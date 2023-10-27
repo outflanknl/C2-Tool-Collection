@@ -75,8 +75,33 @@ CleanUp:
 	return dwValueData;
 }
 
+LPWSTR GetOSVersionAsString() {
+	LPWSTR lpwOSName = NULL;
+
+	HINSTANCE hModule = LoadLibraryA("winbrand.dll");
+	if (hModule == NULL) {
+		return NULL;
+	}
+
+	_BrandingFormatString BrandingFormatString = (_BrandingFormatString)
+		GetProcAddress(GetModuleHandleA("winbrand.dll"), "BrandingFormatString");
+	if (BrandingFormatString == NULL) {
+		return NULL;
+	}
+
+	lpwOSName = BrandingFormatString(L"%WINDOWS_LONG%");
+	FreeLibrary(hModule);
+
+	if (MSVCRT$_wcsicmp(lpwOSName, L"%WINDOWS_LONG%") == 0) {
+		return NULL;
+	}
+
+	return lpwOSName;
+}
+
 VOID go(IN PCHAR Args, IN ULONG Length) {
 	WCHAR chOSMajorMinor[8];
+	LPWSTR lpwOSName = NULL;
 	PNT_TIB pTIB = NULL;
 	PTEB pTEB = NULL;
 	PPEB pPEB = NULL;
@@ -92,12 +117,27 @@ VOID go(IN PCHAR Args, IN ULONG Length) {
 
 	MSVCRT$swprintf_s(chOSMajorMinor, sizeof(chOSMajorMinor), L"%u.%u", pPEB->OSMajorVersion, pPEB->OSMinorVersion);
 
+	lpwOSName = GetOSVersionAsString();
 	dwUBR = ReadUBRFromRegistry();
 	if (dwUBR != 0) {
-		BeaconPrintf(CALLBACK_OUTPUT, "Windows version: %ls, OS build number: %u.%u\n", chOSMajorMinor, pPEB->OSBuildNumber, dwUBR);
+		if (lpwOSName != NULL) {
+			BeaconPrintf(CALLBACK_OUTPUT, "%ls, OS build number: %u.%u\n", lpwOSName, pPEB->OSBuildNumber, dwUBR);
+		}
+		else{
+			BeaconPrintf(CALLBACK_OUTPUT, "Windows version: %ls, OS build number: %u.%u\n", chOSMajorMinor, pPEB->OSBuildNumber, dwUBR);
+		}
 	}
 	else {
-		BeaconPrintf(CALLBACK_OUTPUT, "Windows version: %ls, OS build number: %u\n", chOSMajorMinor, pPEB->OSBuildNumber);
+		if (lpwOSName != NULL) {
+			BeaconPrintf(CALLBACK_OUTPUT, "%ls, OS build number: %u\n", lpwOSName, pPEB->OSBuildNumber);
+		}
+		else{
+			BeaconPrintf(CALLBACK_OUTPUT, "Windows version: %ls, OS build number: %u\n", chOSMajorMinor, pPEB->OSBuildNumber);
+		}
+	}
+
+	if (lpwOSName != NULL) {
+		KERNEL32$GlobalFree((HGLOBAL)lpwOSName);
 	}
 	
 	return;
