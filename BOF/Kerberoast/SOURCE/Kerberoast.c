@@ -60,18 +60,34 @@ VOID BeaconOutputStreamW() {
 	}
 
 	cbSize = ssStreamData.cbSize.LowPart;
-	lpwOutput = KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, cbSize + 1);
+	lpwOutput = KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, cbSize + sizeof(WCHAR));
 	if (lpwOutput != NULL) {
 		pos.QuadPart = 0;
 		if (FAILED(lpStream->lpVtbl->Seek(lpStream, pos, STREAM_SEEK_SET, NULL))) {
 			goto CleanUp;
 		}
 
-		if (FAILED(lpStream->lpVtbl->Read(lpStream, lpwOutput, (ULONG)cbSize, &cbRead))) {		
+		if (FAILED(lpStream->lpVtbl->Read(lpStream, lpwOutput, (ULONG)cbSize, &cbRead))) {
 			goto CleanUp;
 		}
 
-		BeaconOutput(CALLBACK_OUTPUT, (char*)lpwOutput, (int)cbRead);
+		// Flush in chunks to avoid BeaconPrintf internal format buffer limits.
+		DWORD dwTotalChars = (DWORD)(cbRead / sizeof(WCHAR));
+		DWORD dwChunkSize = 4096;
+		DWORD dwPos = 0;
+
+		while (dwPos < dwTotalChars) {
+			DWORD dwEnd = dwPos + dwChunkSize;
+			if (dwEnd >= dwTotalChars) {
+				BeaconPrintf(CALLBACK_OUTPUT, "%ls", &lpwOutput[dwPos]);
+				break;
+			}
+			WCHAR wSaved = lpwOutput[dwEnd];
+			lpwOutput[dwEnd] = L'\0';
+			BeaconPrintf(CALLBACK_OUTPUT, "%ls", &lpwOutput[dwPos]);
+			lpwOutput[dwEnd] = wSaved;
+			dwPos = dwEnd;
+		}
 	}
 
 CleanUp:
