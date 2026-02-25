@@ -51,6 +51,10 @@ VOID BeaconOutputStreamW() {
 	LARGE_INTEGER pos;
 	LPWSTR lpwOutput = NULL;
 
+	if (lpStream == NULL || lpStream <= (LPSTREAM)1) {
+		return;
+	}
+
 	if (FAILED(lpStream->lpVtbl->Stat(lpStream, &ssStreamData, STATFLAG_NONAME))) {
 		return;
 	}
@@ -67,7 +71,7 @@ VOID BeaconOutputStreamW() {
 			goto CleanUp;
 		}
 
-		BeaconPrintf(CALLBACK_OUTPUT, "%ls", lpwOutput);
+		BeaconOutput(CALLBACK_OUTPUT, (char*)lpwOutput, (int)cbRead);
 	}
 
 CleanUp:
@@ -281,6 +285,8 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 			while (hr != S_ADS_NOMORE_ROWS) {
 				// Keep track of count.
 				iCount++;
+				bResult = FALSE;
+				bRoast = FALSE;
 
 				// Loop through the array of passed column names, print the data for each column
 				while (pContainerToSearch->lpVtbl->GetNextColumnName(pContainerToSearch, hSearch, &pszColumn) != S_ADS_NOMORE_COLUMNS) {
@@ -372,7 +378,7 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 
 								// Check for properties of type LargeInteger that represent time
 								// if TRUE, then convert to variant time.
-								if ((0 == MSVCRT$_wcsicmp(L"accountExpires", col.pszAttrName)) |
+								if ((0 == MSVCRT$_wcsicmp(L"accountExpires", col.pszAttrName)) ||
 									(0 == MSVCRT$_wcsicmp(L"badPasswordTime", col.pszAttrName)) ||
 									(0 == MSVCRT$_wcsicmp(L"lastLogon", col.pszAttrName)) ||
 									(0 == MSVCRT$_wcsicmp(L"lastLogoff", col.pszAttrName)) ||
