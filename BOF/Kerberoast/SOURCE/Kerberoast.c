@@ -51,23 +51,43 @@ VOID BeaconOutputStreamW() {
 	LARGE_INTEGER pos;
 	LPWSTR lpwOutput = NULL;
 
+	if (lpStream == NULL || lpStream <= (LPSTREAM)1) {
+		return;
+	}
+
 	if (FAILED(lpStream->lpVtbl->Stat(lpStream, &ssStreamData, STATFLAG_NONAME))) {
 		return;
 	}
 
 	cbSize = ssStreamData.cbSize.LowPart;
-	lpwOutput = KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, cbSize + 1);
+	lpwOutput = KERNEL32$HeapAlloc(KERNEL32$GetProcessHeap(), HEAP_ZERO_MEMORY, cbSize + sizeof(WCHAR));
 	if (lpwOutput != NULL) {
 		pos.QuadPart = 0;
 		if (FAILED(lpStream->lpVtbl->Seek(lpStream, pos, STREAM_SEEK_SET, NULL))) {
 			goto CleanUp;
 		}
 
-		if (FAILED(lpStream->lpVtbl->Read(lpStream, lpwOutput, (ULONG)cbSize, &cbRead))) {		
+		if (FAILED(lpStream->lpVtbl->Read(lpStream, lpwOutput, (ULONG)cbSize, &cbRead))) {
 			goto CleanUp;
 		}
 
-		BeaconPrintf(CALLBACK_OUTPUT, "%ls", lpwOutput);
+		// Flush in chunks to avoid BeaconPrintf internal format buffer limits.
+		DWORD dwTotalChars = (DWORD)(cbRead / sizeof(WCHAR));
+		DWORD dwChunkSize = 4096;
+		DWORD dwPos = 0;
+
+		while (dwPos < dwTotalChars) {
+			DWORD dwEnd = dwPos + dwChunkSize;
+			if (dwEnd >= dwTotalChars) {
+				BeaconPrintf(CALLBACK_OUTPUT, "%ls", &lpwOutput[dwPos]);
+				break;
+			}
+			WCHAR wSaved = lpwOutput[dwEnd];
+			lpwOutput[dwEnd] = L'\0';
+			BeaconPrintf(CALLBACK_OUTPUT, "%ls", &lpwOutput[dwPos]);
+			lpwOutput[dwEnd] = wSaved;
+			dwPos = dwEnd;
+		}
 	}
 
 CleanUp:
@@ -281,6 +301,8 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 			while (hr != S_ADS_NOMORE_ROWS) {
 				// Keep track of count.
 				iCount++;
+				bResult = FALSE;
+				bRoast = FALSE;
 
 				// Loop through the array of passed column names, print the data for each column
 				while (pContainerToSearch->lpVtbl->GetNextColumnName(pContainerToSearch, hSearch, &pszColumn) != S_ADS_NOMORE_COLUMNS) {
@@ -372,7 +394,7 @@ HRESULT FindSPNs(_In_ IDirectorySearch *pContainerToSearch, _In_ BOOL bListSPNs,
 
 								// Check for properties of type LargeInteger that represent time
 								// if TRUE, then convert to variant time.
-								if ((0 == MSVCRT$_wcsicmp(L"accountExpires", col.pszAttrName)) |
+								if ((0 == MSVCRT$_wcsicmp(L"accountExpires", col.pszAttrName)) ||
 									(0 == MSVCRT$_wcsicmp(L"badPasswordTime", col.pszAttrName)) ||
 									(0 == MSVCRT$_wcsicmp(L"lastLogon", col.pszAttrName)) ||
 									(0 == MSVCRT$_wcsicmp(L"lastLogoff", col.pszAttrName)) ||
